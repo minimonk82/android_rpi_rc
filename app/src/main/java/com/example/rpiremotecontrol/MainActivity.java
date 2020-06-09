@@ -3,50 +3,191 @@ package com.example.rpiremotecontrol;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.rpiremotecontrol.pojo.CreateUserResponse;
+import com.example.rpiremotecontrol.pojo.MultipleResource;
+import com.example.rpiremotecontrol.pojo.User;
+import com.example.rpiremotecontrol.pojo.UserList;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+//    APIInterface apiInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        apiInterface = APIClient.getClient().create(APIInterface.class);
+//
+//
+//        /**
+//         GET List Resources
+//         **/
+//        Call<MultipleResource> call = apiInterface.doGetListResources();
+//        call.enqueue(new Callback<MultipleResource>() {
+//            @Override
+//            public void onResponse(Call<MultipleResource> call, Response<MultipleResource> response) {
+//
+//                Log.d("TAG",response.code()+"");
+//
+//                String displayResponse = "";
+//
+//                MultipleResource resource = response.body();
+//                Integer text = resource.page;
+//                Integer total = resource.total;
+//                Integer totalPages = resource.totalPages;
+//                List<MultipleResource.Datum> datumList = resource.data;
+//
+//                displayResponse += text + " Page\n" + total + " Total\n" + totalPages + " Total Pages\n";
+//
+//                for (MultipleResource.Datum datum : datumList) {
+//                    displayResponse += datum.id + " " + datum.name + " " + datum.pantoneValue + " " + datum.year + "\n";
+//                }
+//
+////                responseText.setText(displayResponse);
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<MultipleResource> call, Throwable t) {
+//                call.cancel();
+//            }
+//        });
+//
+//        /**
+//         Create new user
+//         **/
+//        User user = new User("morpheus", "leader");
+//        Call<User> call1 = apiInterface.createUser(user);
+//        call1.enqueue(new Callback<User>() {
+//            @Override
+//            public void onResponse(Call<User> call, Response<User> response) {
+//                User user1 = response.body();
+//
+//                Toast.makeText(getApplicationContext(), user1.name + " " + user1.job + " " + user1.id + " " + user1.createdAt, Toast.LENGTH_SHORT).show();
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<User> call, Throwable t) {
+//                call.cancel();
+//            }
+//        });
+//
+//        /**
+//         GET List Users
+//         **/
+//        Call<UserList> call2 = apiInterface.doGetUserList("2");
+//        call2.enqueue(new Callback<UserList>() {
+//            @Override
+//            public void onResponse(Call<UserList> call, Response<UserList> response) {
+//
+//                UserList userList = response.body();
+//                Integer text = userList.page;
+//                Integer total = userList.total;
+//                Integer totalPages = userList.totalPages;
+//                List<UserList.Datum> datumList = userList.data;
+//                Toast.makeText(getApplicationContext(), text + " page\n" + total + " total\n" + totalPages + " totalPages\n", Toast.LENGTH_SHORT).show();
+//
+//                for (UserList.Datum datum : datumList) {
+//                    Toast.makeText(getApplicationContext(), "id : " + datum.id + " name: " + datum.first_name + " " + datum.last_name + " avatar: " + datum.avatar, Toast.LENGTH_SHORT).show();
+//                }
+//
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UserList> call, Throwable t) {
+//                call.cancel();
+//            }
+//        });
+//
+//
+//        /**
+//         POST name and job Url encoded.
+//         **/
+//        Call<UserList> call3 = apiInterface.doCreateUserWithField("morpheus","leader");
+//        call3.enqueue(new Callback<UserList>() {
+//            @Override
+//            public void onResponse(Call<UserList> call, Response<UserList> response) {
+//                UserList userList = response.body();
+//                Integer text = userList.page;
+//                Integer total = userList.total;
+//                Integer totalPages = userList.totalPages;
+//                List<UserList.Datum> datumList = userList.data;
+//                Toast.makeText(getApplicationContext(), text + " page\n" + total + " total\n" + totalPages + " totalPages\n", Toast.LENGTH_SHORT).show();
+//
+//                for (UserList.Datum datum : datumList) {
+//                    Toast.makeText(getApplicationContext(), "id : " + datum.id + " name: " + datum.first_name + " " + datum.last_name + " avatar: " + datum.avatar, Toast.LENGTH_SHORT).show();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UserList> call, Throwable t) {
+//                call.cancel();
+//            }
+//        });
+
+
     }
 
     public void onFRONT(android.view.View view)
     {
         final TextView txt1  = (TextView)findViewById(R.id.ID_TEXT_STATUS);
-        txt1.setText("FRONT");
+        txt1.setText(R.string.move_front);
+
+        new RestAPITask("http://192.168.219.201:3000/api/f").execute();
     }
 
     public void onSTOP(android.view.View view)
     {
         final TextView txt1  = (TextView)findViewById(R.id.ID_TEXT_STATUS);
-        txt1.setText("STOP");
+        txt1.setText(R.string.move_stop);
+
+        new RestAPITask("http://192.168.219.201:3000/api/s").execute();
     }
 
     public void onREAR(android.view.View view)
     {
         final TextView txt1  = (TextView)findViewById(R.id.ID_TEXT_STATUS);
-        txt1.setText("REAR");
+        txt1.setText(R.string.move_rear);
+
+        new RestAPITask("http://192.168.219.201:3000/api/r").execute();
     }
 
     public void onLEFT(android.view.View view)
     {
         final TextView txt1  = (TextView)findViewById(R.id.ID_TEXT_STATUS);
-        txt1.setText("LEFT");
+        txt1.setText(R.string.move_left);
+
+        new RestAPITask("http://192.168.219.201:3000/api/wl").execute();
     }
 
     public void onCENTER(android.view.View view)
     {
         final TextView txt1  = (TextView)findViewById(R.id.ID_TEXT_STATUS);
-        txt1.setText("CENTER");
+        txt1.setText(R.string.move_center);
+
+        new RestAPITask("http://192.168.219.201:3000/api/ws").execute();
     }
 
     public void onRIGHT(android.view.View view)
     {
         final TextView txt1  = (TextView)findViewById(R.id.ID_TEXT_STATUS);
-        txt1.setText("RIGHT");
+        txt1.setText(R.string.move_right);
+
+        new RestAPITask("http://192.168.219.201:3000/api/wr").execute();
     }
 
 }

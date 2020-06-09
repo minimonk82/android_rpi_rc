@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">RPi Remote Control</string>
+    <string name="move_front">FRONT</string>
+    <string name="move_rear">REAR</string>
+    <string name="move_stop">STOP</string>
+    <string name="move_left">LEFT</string>
+    <string name="move_center">CENTER</string>
+    <string name="move_right">RIGHT</string>
 </resources>
